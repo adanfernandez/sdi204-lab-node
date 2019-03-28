@@ -35,28 +35,35 @@ module.exports = function(app, swig, gestorBD) {
         });
     });
 
-
-
-
-
     app.post('/usuario', function(req, res) {
         var seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
         var usuario = {
             email : req.body.email,
             password : seguro
-        }
+        };
 
-        gestorBD.insertarUsuario(usuario, function(id) {
-            if (id == null){
-                res.send("Error al insertar ");
-            } else {
-                res.send('Usuario Insertado ' + id);
+        var criterio = {
+            email : req.body.email
+        };
+
+        var usuarios = gestorBD.obtenerUsuarios(criterio, function (users) {
+
+            if(users.length > 0) {
+                console.log(usuarios);
+                res.send("Usuario repetido");
+            }
+            else
+            {
+                gestorBD.insertarUsuario(usuario, function(id) {
+                    if (id == null){
+                        res.send("Error al insertar ");
+                    } else {
+                        res.send('Usuario Insertado ' + id);
+                    }
+                });
             }
         });
-
-
-
 
 
     })

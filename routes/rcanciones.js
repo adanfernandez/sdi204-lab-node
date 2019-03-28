@@ -147,7 +147,7 @@ module.exports = function(app, swig, gestorBD) {
         });
     });
 
-    
+
     function paso1ModificarPortada(files, id, callback){
         if (files.portada != null) {
             var imagen =files.portada;
@@ -216,7 +216,7 @@ module.exports = function(app, swig, gestorBD) {
                                     if (err) {
                                         res.send("Error al subir el audio");
                                     } else {
-                                        res.send("Agregada id: "+ id);
+                                        res.redirect("/publicaciones");
                                     }
                                 });
                             }
