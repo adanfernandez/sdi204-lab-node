@@ -127,6 +127,12 @@ app.set('crypto',crypto);
 require("./routes/rusuarios.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 require("./routes/rcanciones.js")(app, swig, gestorBD);
 
+
+app.get('/', function (req, res) {
+    res.redirect('/tienda');
+});
+
+
 app.listen(app.get('port'), function() {
     console.log("Servidor activo");
 });
@@ -140,3 +146,5 @@ app.post("/cancion", function(req, res) {
 app.get('/promo*', function (req, res) {
     res.send('Respuesta patrón promo* ');
 });
+
+
