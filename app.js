@@ -50,6 +50,8 @@ routerUsuarioSession.use(function(req, res, next) {
 //Aplicar routerUsuarioSession
 app.use("/canciones/agregar",routerUsuarioSession);
 app.use("/publicaciones",routerUsuarioSession);
+app.use("/cancion/comprar",routerUsuarioSession);
+app.use("/compras",routerUsuarioSession);
 //app.use("/audios/",routerUsuarioSession);
 
 
@@ -98,24 +100,26 @@ routerAudios.use(function(req, res, next) {
             if(req.session.usuario && canciones[0].autor == req.session.usuario ){
                 next();
             } else {
-                res.redirect("/tienda");
+                var criterio = {
+                    usuario : req.session.usuario,
+                    cancionId : mongo.ObjectID(idCancion)
+                };
+
+                gestorBD.obtenerCompras(criterio ,function(compras){
+                    if (compras != null && compras.length > 0 ){
+                        next();
+                    } else {
+                        res.redirect("/tienda");
+                    }
+                });
+
             }
         })
 });
 //Aplicar routerAudios
 app.use("/audios/",routerAudios);
 
-
-
-
-
-
-
-
-
-
 app.use(express.static('public'));
-
 // Variables
 app.set('port', 8081);
 app.set('db','mongodb://admin:sdi123456@tiendamusica-shard-00-00-ozuku.mongodb.net:27017,tiendamusica-shard-00-01-ozuku.mongodb.net:27017,tiendamusica-shard-00-02-ozuku.mongodb.net:27017/test?ssl=true&replicaSet=tiendamusica-shard-0&authSource=admin&retryWrites=true');
